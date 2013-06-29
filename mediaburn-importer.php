@@ -24,12 +24,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-if ( ! is_admin() )
-	return;
-
-
 $mbi_disable_main				= true;
-
 if ( ! $mbi_disable_main ) {
 	// Load dependencies
 	// TYPO3 includes for helping parse typolink tags
@@ -37,9 +32,6 @@ if ( ! $mbi_disable_main ) {
 	include_once( 'lib/class.t3lib_parsehtml.php' );
 	include_once( 'lib/class.t3lib_softrefproc.php' );
 }
-
-require_once( 'class.options.php' );
-require_once( 'screen-meta-links.php' );
 
 
 /**
@@ -85,7 +77,7 @@ class MediaBurn_Importer {
 	private $date_today				= null;
 
 	// Plugin initialization
-	public function MediaBurn_Importer() {
+	public function __construct() {
 		global $mbi_disable_main;
 
 		$this->mbi_disable_main		= $mbi_disable_main;
@@ -102,11 +94,12 @@ class MediaBurn_Importer {
 		// Place it in this plugin's "localization" folder and name it "mediaburn-importer-[value in wp-config].mo"
 		load_plugin_textdomain( 'mediaburn-importer', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
 
-		add_action( 'admin_menu', array( &$this, 'add_admin_menu' ) );
+		add_action( 'add_meta_boxes', array( &$this, 'mediaburn_import_meta_boxes' ) );
 		add_action( 'admin_enqueue_scripts', array( &$this, 'admin_enqueues' ) );
+		add_action( 'admin_init', array( &$this, 'init' ) );
+		add_action( 'admin_menu', array( &$this, 'add_admin_menu' ) );
 		add_action( 'wp_ajax_importtypo3record', array( &$this, 'ajax_process_record' ) );
 		add_filter( 'plugin_action_links', array( &$this, 'add_plugin_action_links' ), 10, 2 );
-		add_action( 'add_meta_boxes', array( &$this, 'mediaburn_import_meta_boxes' ) );
 		
 		$this->options_link		= '<a href="'.get_admin_url().'options-general.php?page=mbi-options">'.__('Settings', 'mediaburn-importer').'</a>';
 	}
@@ -2641,11 +2634,18 @@ function MediaBurn_Importer() {
 	if ( ! is_admin() )
 		return; 
 
+	require_once( 'class.options.php' );
+
+	global $MBI_Settings;
+	$MBI_Settings = new MBI_Settings();
+
+	require_once( 'screen-meta-links.php' );
+
 	global $MediaBurn_Importer;
 	$MediaBurn_Importer	= new MediaBurn_Importer();
 }
 
-add_action( 'init', 'MediaBurn_Importer' );
+add_action( 'plugins_loaded', 'MediaBurn_Importer' );
 
 function mbi_save_post( $post_id ) {
 	global $MediaBurn_Importer;
@@ -2654,6 +2654,10 @@ function mbi_save_post( $post_id ) {
 		return;
 
 	if ( ! is_numeric( $post_id ) )
+		return;
+
+	$post = get_post( $post_id );
+	if ( 'video' != $post->post_type )
 		return;
 
 	// check that post is wanting the MediaBurn Vzaar media imported

@@ -16,12 +16,9 @@ class MBI_Settings {
 	 * Construct
 	 */
 	public function __construct() {
-		global $wpdb;
-		
 		// This will keep track of the checkbox options for the validate_settings function.
 		$this->reset			= array();
 		$this->settings			= array();
-		$this->get_settings();
 		
 		$this->sections['mediaburn']	= __( 'Alfresco/TYPO3/Vzaar Access', 'mediaburn-importer');
 		$this->sections['selection']	= __( 'Media Selection', 'mediaburn-importer');
@@ -31,14 +28,18 @@ class MBI_Settings {
 		$this->sections['about']	= __( 'About MediaBurn Importer', 'mediaburn-importer');
 		
 		add_action( 'admin_menu', array( &$this, 'add_pages' ) );
-		add_action( 'admin_init', array( &$this, 'register_settings' ) );
-
+		add_action( 'admin_init', array( &$this, 'admin_init' ) );
 		load_plugin_textdomain( 'mediaburn-importer', false, '/mediaburn-importer/languages/' );
+	}
+
+	public function admin_init() {
+		global $wpdb;
 		
+		$this->wpdb = $wpdb;
+		$this->register_settings();
+
 		if ( ! get_option( 'mbi_options' ) )
 			$this->initialize_settings();
-
-		$this->wpdb				= $wpdb;
 	}
 	
 	/**
@@ -723,7 +724,11 @@ EOD;
 				add_settings_section( $slug, $title, array( &$this, 'display_section' ), 'mbi-options' );
 		}
 		
-		$this->get_settings();
+		$this->settings = get_transient( 'MBI_Settings-settings' );
+		if ( false === $this->settings ) {
+			$this->get_settings();
+			set_transient( 'MBI_Settings-settings', $this->settings, 60 * 60 );
+		}
 		
 		foreach ( $this->settings as $id => $setting ) {
 			$setting['id'] = $id;
@@ -973,7 +978,6 @@ EOD;
 	
 }
 
-$MBI_Settings					= new MBI_Settings();
 
 function get_mbi_options( $option, $default = false ) {
 	$options					= get_option( 'mbi_options', $default );
