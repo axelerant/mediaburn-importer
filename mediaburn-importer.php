@@ -229,7 +229,7 @@ EOD;
 			}
 
 			// check that TYPO3 login information is valid
-			if ( ! $mbi_disable_main || $this->check_typo3_access() ) {
+			if ( ! $this->mbi_disable_main || $this->check_typo3_access() ) {
 				// Create the list of image IDs
 				if ( ! empty( $_REQUEST['posts'] ) ) {
 					$posts			= array_map( 'intval', explode( ',', trim( $_REQUEST['posts'], ',' ) ) );
@@ -926,7 +926,8 @@ EOD;
 				$video			= $videos[ 0 ];
 				$vzaar_id		= $video->id;
 
-				update_post_meta( $post_id, 'vzaar_id', $vzaar_id );
+				delete_post_meta( $post_id, 'vzaar_id' );
+				add_post_meta( $post_id, 'vzaar_id', $vzaar_id );
 				unset( $video );
 				
 				$vzaar_id_found	= true;
@@ -954,9 +955,12 @@ EOD;
 			$find				= '&autoplay=true';
 			$video_html			= str_replace( $find, '', $video_html );
 
-			update_post_meta( $post_id, 'wpzoom_post_embed_code', $video_html );
-			update_post_meta( $post_id, 'wpzoom_video_type', 'external' );
-			update_post_meta( $post_id, 'wpzoom_video_update', $this->date_today );
+			delete_post_meta( $post_id, 'wpzoom_post_embed_code' );
+			add_post_meta( $post_id, 'wpzoom_post_embed_code', $video_html );
+			delete_post_meta( $post_id, 'wpzoom_video_type' );
+			add_post_meta( $post_id, 'wpzoom_video_type', 'external' );
+			delete_post_meta( $post_id, 'wpzoom_video_update' );
+			add_post_meta( $post_id, 'wpzoom_video_update', $this->date_today );
 
 			$this->delete_old_thumbnail( $post_id );
 
@@ -2620,7 +2624,7 @@ EOD;
 
 	public function post_mediaburn_import_meta_box( $post ) {
 		wp_nonce_field( 'mediaburn_import', 'mediaburn-importer' );
-		echo '<label for="mediaburn_import" class="selectit">';
+		echo '<label class="selectit">';
 		$checked				= get_post_meta( $post->ID, 'load_vzaar_media', true );
 		echo '<input name="mediaburn_import" type="checkbox" id="mediaburn_import" value="1" ' . checked( $checked, 1, false ) . ' /> ';
 		echo __( 'Load Vzaar Media', 'mediaburn-importer' );
@@ -2657,7 +2661,7 @@ function mbi_save_post( $post_id ) {
 		return;
 
 	$post = get_post( $post_id );
-	if ( 'video' != $post->post_type )
+	if ( ! in_array( $post->post_type, array( 'video', 'revision' ) ) )
 		return;
 
 	// check that post is wanting the MediaBurn Vzaar media imported
