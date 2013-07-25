@@ -501,6 +501,9 @@ EOD;
 	}
 
 	public function check_typo3_access() {
+		if ( $this->mbi_disable_main )
+			return true;
+
 		if ( ! $this->typo3_url ) {
 			$this->errors[] 			= __( "TYPO3 website URL is missing", 'mediaburn-importer' );
 		}
