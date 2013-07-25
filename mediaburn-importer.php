@@ -387,15 +387,19 @@ EOD;
 		);
 
 		$query['posts_per_page'] = 1;
-		$query['meta_query']     = $meta_query_today; 
-		$results                 = new WP_Query( $query );
-		$query_wp                = $results->request;
-		$query_wp                = preg_replace( '#\bLIMIT 0,.*#', '', $query_wp );
-		$done_ids                = $this->wpdb->get_col( $query_wp );;
-		unset( $query['meta_query'] );
 
-		if ( ! empty( $done_ids ) )
-			$query[ 'post__not_in' ]	= $done_ids;
+		$skip_today = get_mbi_options( 'skip_today' );
+		if ( $skip_today ) {
+			$query['meta_query']     = $meta_query_today; 
+			$results                 = new WP_Query( $query );
+			$query_wp                = $results->request;
+			$query_wp                = preg_replace( '#\bLIMIT 0,.*#', '', $query_wp );
+			$done_ids                = $this->wpdb->get_col( $query_wp );;
+			unset( $query['meta_query'] );
+
+			if ( ! empty( $done_ids ) )
+				$query[ 'post__not_in' ]	= $done_ids;
+		}
 
 		$meta_query				= array(
 			array(

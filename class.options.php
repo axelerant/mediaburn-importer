@@ -596,6 +596,14 @@ EOD;
 			'std'     => 1
 		);
 
+		$this->settings['skip_today'] = array(
+			'section' => 'selection',
+			'title'   => __( 'Ignore Recent Updates?', 'mediaburn-importer'),
+			'desc'    => __( 'If checked, will ignore today\'s updates.', 'mediaburn-importer'),
+			'type'    => 'checkbox',
+			'std'     => 1
+		);
+
 		$this->settings['refresh_data'] = array(
 			'section' => 'selection',
 			'title'   => __( 'Refresh MediaBurn Records?', 'mediaburn-importer'),
