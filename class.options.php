@@ -20,11 +20,11 @@ class MBI_Settings {
 		$this->reset			= array();
 		$this->settings			= array();
 		
-		$this->sections['mediaburn']	= __( 'Alfresco/TYPO3/Vzaar Access', 'mediaburn-importer');
+		$this->sections['mediaburn']	= __( 'Vzaar Access', 'mediaburn-importer');
 		$this->sections['selection']	= __( 'Media Selection', 'mediaburn-importer');
 		$this->sections['general']	= __( 'Import Settings', 'mediaburn-importer');
 		$this->sections['testing']	= __( 'Testing Options', 'mediaburn-importer');
-		// $this->sections['reset']	= __( 'Reset/Restore', 'mediaburn-importer');
+		$this->sections['reset']	= __( 'Reset/Restore', 'mediaburn-importer');
 		$this->sections['about']	= __( 'About MediaBurn Importer', 'mediaburn-importer');
 		
 		add_action( 'admin_menu', array( &$this, 'add_pages' ) );
@@ -128,7 +128,7 @@ class MBI_Settings {
 		
 	</form>';
 
-		$copyright				= '<div class="copyright">Copyright %s <a href="http://typo3vagabond.com">TYPO3Vagabond.com.</a></div>';
+		$copyright				= '<div class="copyright">Copyright %s <a href="http://aihr.us">Aihrus.</a></div>';
 		$copyright				= sprintf( $copyright, date( 'Y' ) );
 		echo					<<<EOD
 				$copyright
@@ -205,9 +205,9 @@ EOD;
 		
 		echo					<<<EOD
 			<div style="width: 50%;">
-				<p><img class="alignright size-medium" title="Michael in Red Square, Moscow, Russia" src="/wp-content/plugins/mediaburn-importer/media/michael-cannon-red-square-300x2251.jpg" alt="Michael in Red Square, Moscow, Russia" width="300" height="225" /><a href="http://wordpress.org/extend/plugins/mediaburn-importer/">MediaBurn Importer</a> is by <a href="mailto:michael@typo3vagabond.com">Michael Cannon</a>.</p>
-				<p>He's <a title="Lot's of stuff about Peichi Liu..." href="http://peimic.com/t/peichi-liu/">Peichi’s</a> smiling man, an adventurous&nbsp;<a title="Water rat" href="http://www.chinesezodiachoroscope.com/facebook/index1.php?user_id=690714457" target="_blank">water-rat</a>,&nbsp;<a title="Michael's poetic like literary ramblings" href="http://peimic.com/t/poetry/">poet</a>,&nbsp;<a title="Road biker, cyclist, biking; whatever you call, I love to ride" href="http://peimic.com/c/biking/">road biker</a>,&nbsp;<a title="My traveled to country list, is more than my age." href="http://peimic.com/c/travel/">world traveler</a>,&nbsp;<a title="World Wide Opportunities on Organic Farms" href="http://peimic.com/t/WWOOF/">WWOOF’er</a>&nbsp;and is the&nbsp;<a title="The MediaBurn Vagabond" href="http://typo3vagabond.com/c/featured/">MediaBurn Vagabond</a>&nbsp;with&nbsp;<a title="in2code. Wir leben MediaBurn" href="http://www.in2code.de/">in2code</a>.</p>
-				<p>If you like this plugin, <a href="http://typo3vagabond.com/about-mediaburn-vagabond/donate/">please donate</a>.</p>
+				<p><img class="alignright size-medium" title="Michael in Red Square, Moscow, Russia" src="/wp-content/plugins/mediaburn-importer/media/michael-cannon-red-square-300x2251.jpg" alt="Michael in Red Square, Moscow, Russia" width="300" height="225" /><a href="http://wordpress.org/extend/plugins/mediaburn-importer/">MediaBurn Importer</a> is by <a href="mailto:mc@aihr.us">Michael Cannon</a>.</p>
+				<p>He's <a title="Lot's of stuff about Peichi Liu..." href="http://peimic.com/t/peichi-liu/">Peichi’s</a> smiling man, an adventurous&nbsp;<a title="Water rat" href="http://www.chinesezodiachoroscope.com/facebook/index1.php?user_id=690714457" target="_blank">water-rat</a>,&nbsp;<a title="Michael's poetic like literary ramblings" href="http://peimic.com/t/poetry/">poet</a>,&nbsp;<a title="Road biker, cyclist, biking; whatever you call, I love to ride" href="http://peimic.com/c/biking/">road biker</a>,&nbsp;<a title="My traveled to country list, is more than my age." href="http://peimic.com/c/travel/">world traveler</a>,&nbsp;<a title="World Wide Opportunities on Organic Farms" href="http://peimic.com/t/WWOOF/">WWOOF’er</a>&nbsp;and is the&nbsp;<a title="The MediaBurn Vagabond" href="http://aihr.us/c/featured/">MediaBurn Vagabond</a>&nbsp;with&nbsp;<a title="in2code. Wir leben MediaBurn" href="http://www.in2code.de/">in2code</a>.</p>
+				<p>If you like this plugin, <a href="http://aihr.us/about-aihrus/donate/">please donate</a>.</p>
 			</div>
 EOD;
 		
@@ -304,72 +304,6 @@ EOD;
 	 */
 	public function get_settings() {
 		// MediaBurn Website Access
-		$this->settings['typo3_url'] = array(
-			'title'   => __( 'Website URL', 'mediaburn-importer'),
-			'desc'    => __( 'e.g. http://example.com/', 'mediaburn-importer'),
-			'std'     => '',
-			'type'    => 'text',
-			'req'	=> true,
-			'section' => 'mediaburn'
-		);
-		
-		$this->settings['t3db_host'] = array(
-			'title'   => __( 'Database Host', 'mediaburn-importer'),
-			'std'     => '',
-			'type'    => 'text',
-			'req'	=> true,
-			'section' => 'mediaburn'
-		);
-		
-		$this->settings['t3db_name'] = array(
-			'title'   => __( 'Database Name', 'mediaburn-importer'),
-			'std'     => '',
-			'type'    => 'text',
-			'req'	=> true,
-			'section' => 'mediaburn'
-		);
-		
-		$this->settings['t3db_username'] = array(
-			'title'   => __( 'Database Username', 'mediaburn-importer'),
-			'std'     => '',
-			'type'    => 'text',
-			'req'	=> true,
-			'section' => 'mediaburn'
-		);
-		
-		$this->settings['t3db_password'] = array(
-			'title'   => __( 'Database Password', 'mediaburn-importer'),
-			'type'    => 'password',
-			'std'     => '',
-			'req'	=> true,
-			'section' => 'mediaburn'
-		);
-		
-		$this->settings['alfresco_url'] = array(
-			'title'   => __( 'Alfresco URL', 'mediaburn-importer'),
-			'desc'    => __( 'e.g. http://example.com:8787/alfresco', 'mediaburn-importer'),
-			'std'     => '',
-			'type'    => 'text',
-			'req'	=> true,
-			'section' => 'mediaburn'
-		);
-		
-		$this->settings['alfresco_username'] = array(
-			'title'   => __( 'Alfresco Username', 'mediaburn-importer'),
-			'std'     => '',
-			'type'    => 'text',
-			'req'	=> true,
-			'section' => 'mediaburn'
-		);
-		
-		$this->settings['alfresco_password'] = array(
-			'title'   => __( 'Alfresco Password', 'mediaburn-importer'),
-			'type'    => 'password',
-			'std'     => '',
-			'req'	=> true,
-			'section' => 'mediaburn'
-		);
-		
 		$this->settings['vzaar_username'] = array(
 			'title'   => __( 'Vzaar Username', 'mediaburn-importer'),
 			'std'     => '',
@@ -387,45 +321,6 @@ EOD;
 		);
 		
 		// Import Settings
-		$this->settings['default_author'] = array(
-			'section' => 'general',
-			'title'   => __( 'Default Author', 'mediaburn-importer'),
-			'desc'    => __( 'Select incoming post author when none is provided.', 'mediaburn-importer'),
-			'type'    => 'select',
-			'std'     => '',
-			'choices' => array(
-				'0'	=> __('Current user', 'mediaburn-importer'),
-			)
-		);
-
-		$users					= get_transient( 'MBI_Settings-get_users' );
-		if ( false === $users ) {
-			$users				= get_users();
-			set_transient( 'MBI_Settings-get_users', $users, 60 * 60 );
-		}
-
-		foreach( $users as $user ) {
-			$user_name			= $user->display_name;
-			$user_name			.= ' (' . $user->user_email . ')';
-			$this->settings['default_author']['choices'][ $user->ID ]	= $user_name;
-		}
-		
-		$this->settings['force_post_status'] = array(
-			'section' => 'general',
-			'title'   => __( 'Override Post Status as...?', 'mediaburn-importer'),
-			'desc'    => __( 'Hidden records will remain as Draft.', 'mediaburn-importer'),
-			'type'    => 'radio',
-			'std'     => 'default',
-			'choices' => array(
-				'default'	=> __('No Change', 'mediaburn-importer'),
-				'draft'		=> __('Draft', 'mediaburn-importer'),
-				'publish'	=> __('Publish', 'mediaburn-importer'),
-				'pending'	=> __('Pending', 'mediaburn-importer'),
-				'future'	=> __('Future', 'mediaburn-importer'),
-				'private'	=> __('Private', 'mediaburn-importer')
-			)
-		);
-
 		$this->settings['set_featured_image'] = array(
 			'section' => 'general',
 			'title'   => __( 'Set Featured Image?', 'mediaburn-importer'),
@@ -434,131 +329,13 @@ EOD;
 			'std'     => 1
 		);
 		
-		$this->settings['related_files_header'] = array(
-			'title'   => __( 'Related Files Header' , 'mediaburn-importer'),
-			'std'     => __( 'Related Files', 'mediaburn-importer' ),
-			'type'	=> 'text',
-			'section' => 'general'
-		);
-
-		$this->settings['related_files_header_tag'] = array(
-			'section' => 'general',
-			'title'   => __( 'Related Files Header Tag', 'mediaburn-importer'),
-			'type'    => 'select',
-			'std'     => '3',
-			'choices' => array(
-				'0'	=> __('None', 'mediaburn-importer'),
-				'1'	=> __('H1', 'mediaburn-importer'),
-				'2'	=> __('H2', 'mediaburn-importer'),
-				'3'	=> __('H3', 'mediaburn-importer'),
-				'4'	=> __('H4', 'mediaburn-importer'),
-				'5'	=> __('H5', 'mediaburn-importer'),
-				'6'	=> __('H6', 'mediaburn-importer')
-			)
-		);
-		
-		$this->settings['download_text'] = array(
-			'title'   => __( 'Download Text' , 'mediaburn-importer'),
-			'std'     => __( 'Download %s', 'mediaburn-importer' ),
-			'type'	=> 'text',
-			'section' => 'general'
-		);
-
-		$this->settings['google_docs_viewer_url'] = array(
-			'title'   => __( 'Google Docs Viewer URL' , 'mediaburn-importer'),
-			'std'     => __( 'http://docs.google.com/viewer?url=', 'mediaburn-importer' ),
-			'type'	=> 'text',
-			'section' => 'general'
-		);
-		
-		$this->settings['google_docs_viewer_text'] = array(
-			'title'   => __( 'Google Docs Viewer Text' , 'mediaburn-importer'),
-			'std'     => __( 'Read %s online', 'mediaburn-importer' ),
-			'type'	=> 'text',
-			'section' => 'general'
-		);
-
-		$this->settings['google_docs_viewer_width'] = array(
-			'title'   => __( 'Google Docs Viewer Width' , 'mediaburn-importer'),
-			'std'     => 690,
-			'type'	=> 'text',
-			'section' => 'general'
-		);
-
-		$this->settings['related_files_wrap'] = array(
-			'title'   => __( 'Related Files Wrap' , 'mediaburn-importer'),
-			'desc'   => __( 'Useful for adding membership oriented shortcodes around premium content. "|" separates before and after content. e.g. [paid]|[/paid]' , 'mediaburn-importer'),
-			'type'	=> 'text',
-			'section' => 'general'
-		);
-
 		// Testing
-		$this->settings['no_mbrecords_import'] = array(
-			'section' => 'testing',
-			'title'   => __( "Don't Import MediaBurn Records" , 'mediaburn-importer'),
-			'type'    => 'checkbox',
-			'std'     => 0
-		);
-
-		$this->settings['no_documents_import'] = array(
-			'section' => 'testing',
-			'title'   => __( "Don't Import Documents" , 'mediaburn-importer'),
-			'type'    => 'checkbox',
-			'std'     => 0
-		);
-
-		$this->settings['no_users_import'] = array(
-			'section' => 'testing',
-			'title'   => __( "Don't Import Users" , 'mediaburn-importer'),
-			'type'    => 'checkbox',
-			'std'     => 0
-		);
-
-		$this->settings['no_media_import'] = array(
-			'section' => 'testing',
-			'title'   => __( "Don't Import Attachments" , 'mediaburn-importer'),
-			'desc'    => __( 'Skips importing any related images and other media files of records.', 'mediaburn-importer'),
-			'type'    => 'checkbox',
-			'std'     => 0
-		);
-
 		$this->settings['import_limit'] = array(
 			'section' => 'testing',
 			'title'   => __( 'Import Limit', 'mediaburn-importer'),
 			'desc'    => __( 'Number of records allowed to import at a time. 0 for all..', 'mediaburn-importer'),
 			'std'     => '',
 			'type'    => 'text'
-		);
-		
-		$this->settings['debug_mode'] = array(
-			'section' => 'testing',
-			'title'   => __( 'Debug Mode' , 'mediaburn-importer'),
-			'desc'	  => __( 'Bypass Ajax controller to handle mbr_to_import directly for testing purposes', 'mediaburn-importer' ),
-			'type'    => 'checkbox',
-			'std'     => 0
-		);
-		
-		$desc_all				= __( "This will remove ALL imported records from MediaBurn. Related meta will also be deleted.", 'mediaburn-importer');
-		$desc_attachments		= __( "This will remove ALL media without a related post. It's possible for non-imported attachments to be deleted.", 'mediaburn-importer');
-		$desc_documents			= __( "This will remove ALL documents imported with the 't3:doc.uid' meta key. Related post media will also be deleted." , 'mediaburn-importer');
-		$desc_imports			= __( "This will remove ALL posts imported with the 't3:mbr.uid' meta key. Related post media will also be deleted.", 'mediaburn-importer');
-		$desc_taxonomy		= __( "This will remove ALL imported taxonomy records.", 'mediaburn-importer');
-		$desc_users				= __( "This will remove ALL users imported with the 't3:author.uid' and 't3:fe_user.uid' meta keys." , 'mediaburn-importer');
-
-		// Reset/restore
-		$this->settings['delete'] = array(
-			'section' => 'reset',
-			'title'   => __( 'Delete...', 'mediaburn-importer'),
-			'type'    => 'radio',
-			'std'     => '',
-			'choices' => array(
-				'all'			=> __( 'All Imported', 'mediaburn-importer') . ': ' . $desc_all,
-				'videos'		=> __( 'Imported videos', 'mediaburn-importer') . ': ' . $desc_imports,
-				'documents'		=> __( 'Imported documents', 'mediaburn-importer') . ': ' . $desc_documents,
-				'users'			=> __( 'Imported users', 'mediaburn-importer') . ': ' . $desc_users,
-				'taxonomy'		=> __( 'Imported taxonomy', 'mediaburn-importer') . ': ' . $desc_taxonomy,
-				'attachments'	=> __( 'Unattached attachments', 'mediaburn-importer') . ': ' . $desc_attachments
-			)
 		);
 		
 		$this->settings['reset_plugin'] = array(
@@ -572,22 +349,6 @@ EOD;
 
 
 		// selection
-		$this->settings['custom_update'] = array(
-			'section' => 'selection',
-			'title'   => __( 'Custom Updates Only?', 'mediaburn-importer'),
-			'desc'    => __( 'Custom one-time only updates', 'mediaburn-importer'),
-			'type'    => 'checkbox',
-			'std'     => 0
-		);
-		
-		$this->settings['load_vzaar_media_only'] = array(
-			'section' => 'selection',
-			'title'   => __( 'Load Vzaar Media Only?', 'mediaburn-importer'),
-			'desc'    => __( 'Bypass normal importing to only load video records needing Vzaar video embed code and thumbnail.', 'mediaburn-importer'),
-			'type'    => 'checkbox',
-			'std'     => 0
-		);
-		
 		$this->settings['update_vzaar_media'] = array(
 			'section' => 'selection',
 			'title'   => __( 'Reload Vzaar Media?', 'mediaburn-importer'),
@@ -596,111 +357,12 @@ EOD;
 			'std'     => 1
 		);
 
-		$this->settings['skip_today'] = array(
-			'section' => 'selection',
-			'title'   => __( 'Ignore Recent Updates?', 'mediaburn-importer'),
-			'desc'    => __( 'If checked, will ignore today\'s updates.', 'mediaburn-importer'),
-			'type'    => 'checkbox',
-			'std'     => 1
-		);
-
-		$this->settings['refresh_data'] = array(
-			'section' => 'selection',
-			'title'   => __( 'Refresh MediaBurn Records?', 'mediaburn-importer'),
-			'desc'    => __( 'Update local MediaBurn records with changes from remote system.', 'mediaburn-importer'),
-			'type'    => 'checkbox',
-			'std'     => 0
-		);
-
-		$this->settings['mbr_custom_where'] = array(
-			'title'   => __( 'Media WHERE Clause' , 'mediaburn-importer'),
-			'desc'    => __( "WHERE clause used to select records from MediaBurn. e.g.: AND tx_tyfrescomedia_mediaburnRecord.deleted = 0 AND tx_tyfrescomedia_mediaburnRecord.pid > 0" , 'mediaburn-importer'),
-			'std'     => 'AND tx_tyfrescomedia_mediaburnRecord.deleted = 0 AND tx_tyfrescomedia_mediaburnRecord.pid > 0',
-			'type'	=> 'text',
-			'section' => 'selection'
-		);
-		
-		$this->settings['mbr_custom_order'] = array(
-			'title'   => __( 'Media ORDER Clause' , 'mediaburn-importer'),
-			'desc'    => __( "ORDER clause used to select records from MediaBurn. e.g.: ORDER BY tx_tyfrescomedia_mediaburnRecord.uid ASC" , 'mediaburn-importer'),
-			'std'     => 'ORDER BY tx_tyfrescomedia_mediaburnRecord.uid ASC',
-			'type'	=> 'text',
-			'section' => 'selection'
-		);
-
 		$this->settings['mbr_to_import'] = array(
 			'title'   => __( 'Media to Import' , 'mediaburn-importer'),
 			'desc'    => __( "A CSV list of record uids to import, like '1,2,3'. Overrides 'Media Selection Criteria'. Key: N for original MediaBurn record; N:u for users; N:d for documents; N:v for new video record (reload Vzaar media). Example: 1,22,333,1:d,22:d,333:d,1:u,22:u,333:u,1:v,22:v,333:v" , 'mediaburn-importer'),
 			'type'	=> 'text',
 			'section' => 'selection'
 		);
-		
-		$this->settings['mbr_to_skip'] = array(
-			'title'   => __( 'Skip Importing Media' , 'mediaburn-importer'),
-			'desc'    => __( "A CSV list of record uids not to import, like '1,2,3'." , 'mediaburn-importer'),
-			'type'	=> 'text',
-			'section' => 'selection'
-		);
-		
-		// Here for reference
-		if ( false ) {
-		$this->settings['example_text'] = array(
-			'title'   => __( 'Example Text Input', 'mediaburn-importer'),
-			'desc'    => __( 'This is a description for the text input.', 'mediaburn-importer'),
-			'std'     => 'Default value',
-			'type'    => 'text',
-			'section' => 'general'
-		);
-		
-		$this->settings['example_textarea'] = array(
-			'title'   => __( 'Example Textarea Input', 'mediaburn-importer'),
-			'desc'    => __( 'This is a description for the textarea input.', 'mediaburn-importer'),
-			'std'     => 'Default value',
-			'type'    => 'textarea',
-			'section' => 'general'
-		);
-		
-		$this->settings['example_checkbox'] = array(
-			'section' => 'general',
-			'title'   => __( 'Example Checkbox', 'mediaburn-importer'),
-			'desc'    => __( 'This is a description for the checkbox.', 'mediaburn-importer'),
-			'type'    => 'checkbox',
-			'std'     => 1 // Set to 1 to be checked by default, 0 to be unchecked by default.
-		);
-		
-		$this->settings['example_heading'] = array(
-			'section' => 'general',
-			'title'   => '', // Not used for headings.
-			'desc'    => 'Example Heading',
-			'type'    => 'heading'
-		);
-		
-		$this->settings['example_radio'] = array(
-			'section' => 'general',
-			'title'   => __( 'Example Radio', 'mediaburn-importer'),
-			'desc'    => __( 'This is a description for the radio buttons.', 'mediaburn-importer'),
-			'type'    => 'radio',
-			'std'     => '',
-			'choices' => array(
-				'choice1' => 'Choice 1',
-				'choice2' => 'Choice 2',
-				'choice3' => 'Choice 3'
-			)
-		);
-		
-		$this->settings['example_select'] = array(
-			'section' => 'general',
-			'title'   => __( 'Example Select', 'mediaburn-importer'),
-			'desc'    => __( 'This is a description for the drop-down.', 'mediaburn-importer'),
-			'type'    => 'select',
-			'std'     => '',
-			'choices' => array(
-				'choice1' => 'Other Choice 1',
-				'choice2' => 'Other Choice 2',
-				'choice3' => 'Other Choice 3'
-			)
-		);
-		}
 	}
 	
 	/**
@@ -768,14 +430,6 @@ EOD;
 	* Validate settings
 	*/
 	public function validate_settings( $input ) {
-		
-		// TODO validate for
-		// MediaBurn db connectivity
-
-		if ( false && $input['debug_mode'] && '' == $input['mbr_to_import'] ) {
-			add_settings_error( 'mbi-options', 'mbr_to_import', __( 'Media to Import is required' , 'mediaburn-importer') );
-		}
-
 		if ( '' != $input['import_limit'] ) {
 			$input['import_limit']	= intval( $input['import_limit'] );
 		}
@@ -787,85 +441,7 @@ EOD;
 			$input['mbr_to_import']	= $mbr_to_import;
 		}
 		
-		if ( '' != $input['mbr_to_skip'] ) {
-			$mbr_to_skip		= $input['mbr_to_skip'];
-			$mbr_to_skip		= preg_replace( '#\s+#', '', $mbr_to_skip);
-
-			$input['mbr_to_skip']	= $mbr_to_skip;
-		}
-		
-		if ( '' == $input['typo3_url'] ) {
-			add_settings_error( 'mbi-options', 'typo3_url', __('Website URL is required', 'mediaburn-importer') );
-		} else {
-			$typo3_url			= $input['typo3_url'];
-			// append / if needed and save to options
-			$typo3_url	= preg_replace('#(/{0,})?$#', '/',  $typo3_url);
-			// silly // fix, above regex no matter what doesn't seem to work on 
-			// this
-			$typo3_url	= preg_replace('#//$#', '/',  $typo3_url);
-			// Store details for later
-			$input['typo3_url']	= $typo3_url;
-
-			// check for typo3_url validity & reachability
-			if ( false && ! $this->_is_typo3_website( $typo3_url ) ) {
-				add_settings_error( 'mbi-options', 'typo3_url', __( "MediaBurn site not found at given Website URL", 'mediaburn-importer' ) );
-			}
-		}
-		
-		if ( '' == $input['t3db_host'] ) {
-			add_settings_error( 'mbi-options', 't3db_host', __('Database Host is required', 'mediaburn-importer') );
-		}
-		
-		if ( '' == $input['t3db_name'] ) {
-			add_settings_error( 'mbi-options', 't3db_name', __('Database Name is required', 'mediaburn-importer') );
-		}
-		
-		if ( '' == $input['t3db_username'] ) {
-			add_settings_error( 'mbi-options', 't3db_username', __('Database Username is required', 'mediaburn-importer') );
-		}
-		
-		if ( '' == $input['t3db_password'] ) {
-			add_settings_error( 'mbi-options', 't3db_password', __('Database Password is required', 'mediaburn-importer') );
-		}
-
-		if ( isset( $input['delete'] ) && $input['delete'] ) {
-			set_time_limit( 0 );
-
-			switch ( $input['delete'] ) {
-				case 'all' :
-					$this->delete_videos();
-					$this->delete_documents();
-					$this->delete_taxonomy();
-					$this->delete_users();
-					$this->delete_attachments();
-					break;
-
-				case 'taxonomy' :
-					$this->delete_taxonomy();
-					break;
-
-				case 'users' :
-					$this->delete_users();
-					break;
-
-				case 'videos' :
-					$this->delete_videos();
-					break;
-
-				case 'documents' :
-					$this->delete_videos( 't3:doc.uid' );
-					break;
-
-				case 'attachments' :
-					$this->delete_attachments();
-					break;
-			}
-
-			unset( $input['delete'] );
-			return $input;
-		}
-
-		if ( $input['reset_plugin'] ) {
+		if ( ! empty( $input['reset_plugin'] ) ) {
 			foreach ( $this->reset as $id => $std ) {
 				$input[$id]	= $std;
 			}
@@ -877,113 +453,6 @@ EOD;
 
 	}
 
-	function _is_typo3_website( $url = null ) {
-		// regex url
-		if ( filter_var( $url, FILTER_VALIDATE_URL ) ) {
-			// pull site's MediaBurn admin url, http://example.com/typo3
-			$typo3_url			= preg_replace( '#$#', 'typo3/index.php', $url );
-
-			// check for MediaBurn header code
-			$html				= @file_get_contents( $typo3_url );
-
-			// look for `<meta name="generator" content="MediaBurn`
-			// looking for meta doesn't work as MediaBurn throws browser error
-			// if exists, return true, else false
-			if ( preg_match( '#typo3logo#', $html ) ) {
-				return true;
-			} else {
-				// not typo3 site
-				return false;
-			}
-		} else {
-			// bad url
-			return false;
-		}
-	}
-
-	function delete_taxonomy() {
-		$taxonomy_count				= 0;
-
-		$taxonomys					= $this->wpdb->get_results( "SELECT term_id, taxonomy FROM {$this->wpdb->term_taxonomy} WHERE taxonomy IN ( 'languages', 'genres', 'collections', 'producers',  'language', 'genre', 'collection', 'producer', 'category', 'post_tag', 'author' )" );
-
-		foreach( $taxonomys as $taxonomy ) {
-			wp_delete_term( $taxonomy->term_id, $taxonomy->taxonomy );
-
-			$taxonomy_count++;
-		}
-
-		add_settings_error( 'mbi-options', 'imports', sprintf( __( "Successfully removed %s MediaBurn taxonomy records." , 'mediaburn-importer'), number_format( $taxonomy_count ) ), 'updated' );
-	}
-
-	function delete_users() {
-		$user_count				= 0;
-
-		$users					= $this->wpdb->get_results( "SELECT user_id FROM {$this->wpdb->usermeta} WHERE meta_key IN ( 't3:author.uid', 't3:editor', 't3:fe_user.uid' ) AND user_id NOT IN (1, 2)" );
-
-		foreach( $users as $user ) {
-			// returns array of obj->ID
-			$user_id			= $user->user_id;
-
-			// dels user, meta & documents
-			// true is force delete
-			wp_delete_user( $user_id );
-
-			$user_count++;
-		}
-
-		add_settings_error( 'mbi-options', 'imports', sprintf( __( "Successfully removed %s MediaBurn user records and their related data." , 'mediaburn-importer'), number_format( $user_count ) ), 'updated' );
-	}
-
-	function delete_documents() {
-		$this->delete_videos( 't3:doc.uid' );
-	}
-
-	function delete_videos( $key = 't3:mbr.uid' ) {
-		$post_count				= 0;
-
-		// during botched imports not all postmeta is read successfully
-		// pull post ids with typo3_uid as post_meta key
-		$posts					= $this->wpdb->get_results( "SELECT post_id FROM {$this->wpdb->postmeta} WHERE meta_key = '$key'" );
-
-		foreach( $posts as $post ) {
-			// returns array of obj->ID
-			$post_id			= $post->post_id;
-
-			// remove media relationships
-			$this->delete_attachments( $post_id, false );
-
-			// dels post, meta & documents
-			// true is force delete
-			wp_delete_post( $post_id, true );
-
-			$post_count++;
-		}
-
-		add_settings_error( 'mbi-options', 'imports', sprintf( __( "Successfully removed %s MediaBurn media records and their related data." , 'mediaburn-importer'), number_format( $post_count ) ), 'updated' );
-	}
-
-	function delete_attachments( $post_id = false, $report = true ) {
-		$post_id				= $post_id ? $post_id : 0;
-
-		if ( true || $post_id ) {
-			$query				= "SELECT ID FROM {$this->wpdb->posts} WHERE post_type = 'attachment' AND post_parent = {$post_id}";
-		} else {
-			$query				= "SELECT post_id ID FROM {$this->wpdb->postmeta} WHERE meta_key = 't3:media'";
-		}
-
-		$attachments			= $this->wpdb->get_results( $query );
-
-		$attachment_count		= 0;
-		foreach( $attachments as $attachment ) {
-			// true is force delete
-			wp_delete_attachment( $attachment->ID, true );
-			$attachment_count++;
-		}
-
-		if ( $report )
-			add_settings_error( 'mbi-options', 'attachments', sprintf( __( "Successfully removed %s no-post attachments." , 'mediaburn-importer'), number_format( $attachment_count ) ), 'updated' );
-	}
-	
 }
 
 

@@ -1,15 +1,15 @@
 === MediaBurn Importer ===
 Contributors: comprock
-Donate link: http://typo3vagabond.com/about-typo3-vagabond/donate/
-Tags: typo3, importer, mediaburn
+Donate link: http://aihr.us/about-aihrus/donate/
+Tags: vzaar, importer, mediaburn
 Requires at least: 3.0.0
 Tested up to: 3.3
 Stable tag: trunk
 
-Easily import thousands of media records from TYPO3 into WordPress.
+Easily assign Vzaar media records to WordPress videos.
 
 == Description ==
-Easily import thousands of media records from TYPO3 into WordPress.
+Easily assign Vzaar media records to WordPress videos.
 
 == Installation ==
 1. Upload the `mediaburn-importer` folder to the `/wp-content/plugins/` directory
@@ -26,6 +26,10 @@ Yes. Any sponsoring would be greatly welcome. Please [donate](http://typo3vagabo
 1. TBD
 
 == Changelog ==
+= vzaar =
+* Removed TYPO3 remnants
+* Focus on Vzaar importing only
+
 = trunk =
 * Revise data refresh handling
 * Revise insert/update handling
