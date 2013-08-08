@@ -8,7 +8,7 @@ Author: Michael Cannon
 Author URI: http://aihr.us/contact-aihrus/
 License: GPL2
 
-Copyright 2012  Michael Cannon  (email : mc@aihr.us)
+Copyright 2013  Michael Cannon  (email : mc@aihr.us)
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License, version 2, as 
@@ -30,23 +30,20 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * @package mediaburn-importer
  */
 class MediaBurn_Importer {
-	private $date_today				= null;
-	private $init					= false;
-	private $init_vzaar				= false;
-	private $menu_id;
-	private $vzaar_username			= null;
-	private $wpdb					= null;
+	private $menu_id               = null;
+	private static $init           = false;
+	private static $init_vzaar     = false;
+	private static $vzaar_username = null;
+	private static $wpdb           = null;
 
 	// Plugin initialization
 	public function __construct() {
-		$this->date_today			= date( 'Y-m-d', current_time( 'timestamp' ) - ( 60 * 60 * 24 ) );
-
 		// Capability check
 		if ( ! current_user_can( 'manage_options' ) )
 			return;
 
 		if ( ! function_exists( 'admin_url' ) )
-			return false;
+			return;
 
 		add_action( 'add_meta_boxes', array( $this, 'mediaburn_import_meta_boxes' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueues' ) );
@@ -59,13 +56,13 @@ class MediaBurn_Importer {
 		$this->options_link		= '<a href="'.get_admin_url().'options-general.php?page=mbi-options">'.__('Settings', 'mediaburn-importer').'</a>';
 	}
 
-	public function init() {
-		if ( is_null( $this->wpdb ) ) {
+	public static function init() {
+		if ( is_null( self::$wpdb ) ) {
 			global $wpdb;
-			$this->wpdb			= $wpdb;
+			self::$wpdb			= $wpdb;
 		}
 
-		$this->init				= true;
+		self::$init				= true;
 	}
 
 	public function init_vzaar() {
@@ -74,10 +71,10 @@ class MediaBurn_Importer {
 
 		$vzaar_application_token	= get_mbi_options( 'vzaar_application_token' );
 		Vzaar::$token			= $vzaar_application_token;
-		$this->vzaar_username	= get_mbi_options( 'vzaar_username' );
-		Vzaar::$secret			= $this->vzaar_username;
+		self::$vzaar_username	= get_mbi_options( 'vzaar_username' );
+		Vzaar::$secret			= self::$vzaar_username;
 
-		$this->init_vzaar			= true;
+		self::$init_vzaar			= true;
 	}
 
 	// Display a Settings link on the main Plugins page
@@ -122,8 +119,8 @@ class MediaBurn_Importer {
 	}
 
 	public function user_interface() {
-		if ( ! $this->init )
-			$this->init();
+		if ( ! self::$init )
+			self::init();
 
 		echo <<<EOD
 <div id="message" class="updated fade" style="display:none"></div>
@@ -174,7 +171,7 @@ EOD;
 		// empty wpzoom_post_embed_code & wpzoom_video_type
 		// if update_vzaar_media, then all videos
 		$query					= array(
-			'post_status'		=> 'publish',
+			'post_status'		=> array( 'publish', 'private' ),
 			'post_type'			=> 'video',
 			'orderby'			=> 'post_modified',
 			'order'				=> 'DESC',
@@ -206,7 +203,7 @@ EOD;
 				$results  = new WP_Query( $query );
 				$query_wp = $results->request;
 				$query_wp = preg_replace( '#\bLIMIT 0,.*#', '', $query_wp );
-				$done_ids = $this->wpdb->get_col( $query_wp );;
+				$done_ids = self::$wpdb->get_col( $query_wp );;
 				foreach ( $done_ids as $id )
 					$query[ 'post__not_in' ][]	= $id;
 			}
@@ -232,7 +229,7 @@ EOD;
 			$query_wp = preg_replace( '#\bLIMIT 0,.*#', '', $query_wp );
 		}
 
-		$results_array = $this->wpdb->get_col( $query_wp );
+		$results_array = self::$wpdb->get_col( $query_wp );
 		sort( $results_array );
 
 		return $results_array;
@@ -256,7 +253,7 @@ EOD;
 		<div id="mbiposts-bar-percent" style="position:absolute;left:50%;top:50%;width:300px;margin-left:-150px;height:25px;margin-top:-9px;font-weight:bold;text-align:center;"></div>
 	</div>
 
-	<p><input type="button" class="button hide-if-no-js" name="mbiposts-stop" id="mbiposts-stop" value="<?php _e( 'Abort Importing TYPO3 Media', 'mediaburn-importer' ) ?>" /></p>
+	<p><input type="button" class="button hide-if-no-js" name="mbiposts-stop" id="mbiposts-stop" value="<?php _e( 'Abort Importing Vzaar Data', 'mediaburn-importer' ) ?>" /></p>
 
 	<h3 class="title"><?php _e( 'Debugging Information', 'mediaburn-importer' ) ?></h3>
 
@@ -402,28 +399,23 @@ EOD;
 
 	// Process a single image ID (this is an AJAX handler)
 	public function ajax_process_record() {
-		if ( ! $this->init )
-			$this->init();
+		if ( ! self::$init )
+			self::init();
 
-		$parts					= $this->mbr_uid;
-		$orig_mbr_uid			= $parts;
-		$parts					= explode( ':', $parts );
-		$type					= isset( $parts[1] ) ? $parts[1] : false;
-		$this->mbr_uid			= (int) $parts[0];
+		error_reporting( 0 ); // Don't break the JSON result
+		header( 'Content-type: application/json' );
+		$post_id = $_REQUEST['id'];
+		self::load_vzaar_media( $post_id, true );
 
-		$post_id		= $this->mbr_uid;
-		$this->load_vzaar_media( $post_id, true );
-
-		echo sprintf( __( '&quot;<a href="%1$s" target="_blank">%2$s</a>&quot; Post ID %3$s was successfully processed in %4$s seconds.', 'mediaburn-importer' ), get_permalink( $post_id ), esc_html( get_the_title( $post_id ) ), $post_id, timer_stop() ) . '<br />';
-		break;
+		die( json_encode( array( 'success' => sprintf( __( '&quot;<a href="%1$s" target="_blank">%2$s</a>&quot; Post ID %3$s was successfully processed in %4$s seconds.', 'mediaburn-importer' ), get_permalink( $post_id ), esc_html( get_the_title( $post_id ) ), $post_id, timer_stop() ) ) ) );
 	}
 
-	public function load_vzaar_media( $post_id, $force = false ) {
-		if ( ! $this->init )
-			$this->init();
+	public static function load_vzaar_media( $post_id, $force = false ) {
+		if ( ! self::$init )
+			self::init();
 
-		if ( ! $this->init_vzaar )
-			$this->init_vzaar();
+		if ( ! self::$init_vzaar )
+			self::init_vzaar();
 
 		$vzaar_id_found			= false;
 		$vzaar_id				= get_post_meta( $post_id, 'vzaar_id', true );
@@ -436,7 +428,7 @@ EOD;
 				return;
 
 			$title_lookup		= $control_number . '_';
-			$videos				= Vzaar::searchVideoList( $this->vzaar_username, true, $title_lookup );
+			$videos				= Vzaar::searchVideoList( self::$vzaar_username, true, $title_lookup );
 
 			if ( isset( $videos[ 0 ] ) && is_object( $videos[ 0 ] ) ) {
 				$video			= $videos[ 0 ];
@@ -475,23 +467,21 @@ EOD;
 			add_post_meta( $post_id, 'wpzoom_post_embed_code', $video_html );
 			delete_post_meta( $post_id, 'wpzoom_video_type' );
 			add_post_meta( $post_id, 'wpzoom_video_type', 'external' );
-			delete_post_meta( $post_id, 'wpzoom_video_update' );
-			add_post_meta( $post_id, 'wpzoom_video_update', $this->date_today );
 
-			$this->delete_old_thumbnail( $post_id );
+			self::delete_old_thumbnail( $post_id );
 
 			// get thumbnail from Vzaar
-			$video_image_url			= $video->framegrabUrl;
-			$file						= $slug . '-video-thumbnail.jpg';
-			$this->featured_image_id	= $this->_import_attachment( $post_id, $file, $video_image_url, $slug );
+			$video_image_url   = $video->framegrabUrl;
+			$file              = $slug . '-video-thumbnail.jpg';
+			$featured_image_id = self::_import_attachment( $post_id, $file, $video_image_url, $slug );
 		}
 
-		if ( $force && get_mbi_options( 'set_featured_image' ) && $this->featured_image_id ) {
-			update_post_meta( $post_id, '_thumbnail_id', $this->featured_image_id );
+		if ( $force && get_mbi_options( 'set_featured_image' ) && $featured_image_id ) {
+			update_post_meta( $post_id, '_thumbnail_id', $featured_image_id );
 		}
 	}
 
-	public function delete_old_thumbnail( $post_id ) {
+	public static function delete_old_thumbnail( $post_id ) {
 		$thumbnail_ids			= get_post_meta( $post_id, '_thumbnail_id' );
 
 		foreach ( $thumbnail_ids as $key => $thumbnail_id ) {
@@ -503,7 +493,7 @@ EOD;
 		}
 	}
 
-	public function _import_attachment( $post_id, $file, $original_file_uri, $slug ) {
+	public static function _import_attachment( $post_id, $file, $original_file_uri, $slug ) {
 		$file_move				= wp_upload_bits($file, null, file_get_contents($original_file_uri));
 		$filename				= $file_move['file'];
 
@@ -555,19 +545,19 @@ function MediaBurn_Importer() {
 	require_once( 'class.options.php' );
 
 	global $MBI_Settings;
-	$MBI_Settings = new MBI_Settings();
+	if ( is_null( $MBI_Settings ) )
+		$MBI_Settings = new MBI_Settings();
 
 	require_once( 'screen-meta-links.php' );
 
 	global $MediaBurn_Importer;
-	$MediaBurn_Importer	= new MediaBurn_Importer();
+	if ( is_null( $MediaBurn_Importer ) )
+		$MediaBurn_Importer	= new MediaBurn_Importer();
 }
 
 add_action( 'plugins_loaded', 'MediaBurn_Importer' );
 
 function mbi_save_post( $post_id ) {
-	global $MediaBurn_Importer;
-
 	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) 
 		return;
 
@@ -578,8 +568,10 @@ function mbi_save_post( $post_id ) {
 	if ( ! in_array( $post->post_type, array( 'video', 'revision' ) ) )
 		return;
 
+	custom_add_save( $post_id );
+
 	// check that post is wanting the MediaBurn Vzaar media imported
-	if ( ! wp_verify_nonce( $_POST['mediaburn-importer'], 'mediaburn_import' ) )
+	if ( ! empty( $_POST['mediaburn-importer'] ) && ! wp_verify_nonce( $_POST['mediaburn-importer'], 'mediaburn_import' ) )
 		return;
 
 	// save checkbox or not
@@ -591,13 +583,12 @@ function mbi_save_post( $post_id ) {
 	if ( ! $checked )
 		return;
 
-	remove_action( 'save_post', 'mbi_save_post', 99 );
-
-	$MediaBurn_Importer->load_vzaar_media( $post_id, true );
+	remove_action( 'save_post', 'mbi_save_post' );
+	MediaBurn_Importer::load_vzaar_media( $post_id, true );
 	
-	add_action( 'save_post', 'mbi_save_post', 99 );
+	add_action( 'save_post', 'mbi_save_post' );
 }
 
-add_action( 'save_post', 'mbi_save_post', 99 );
+add_action( 'save_post', 'mbi_save_post' );
 
 ?>
