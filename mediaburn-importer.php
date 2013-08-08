@@ -234,7 +234,6 @@ EOD;
 
 		$results_array = $this->wpdb->get_col( $query_wp );
 		sort( $results_array );
-		exit( __LINE__ . ':' . basename( __FILE__ ) . " ERROR<br />\n" );
 
 		return $results_array;
 	}
