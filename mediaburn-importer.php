@@ -568,7 +568,24 @@ function mbi_save_post( $post_id ) {
 	if ( ! in_array( $post->post_type, array( 'video', 'revision' ) ) )
 		return;
 
-	custom_add_save( $post_id );
+	// the following replaces WPZooms mostly useless custom_add_save( $post_id );
+	$fields = array(
+		'wpzoom_is_featured',
+		'wpzoom_post_template',
+		'wpzoom_post_embed_location',
+		'wpzoom_video_type',
+		'wpzoom_post_embed_code',
+		'wpzoom_post_embed_self',
+		'wpzoom_post_embed_hd',
+		'wpzoom_post_embed_skin',
+	);
+
+	foreach ( $fields as $field ) {
+		if ( isset( $_POST[ $field ] ) )
+			update_custom_meta( $post_id, $_POST[ $field ], $field );
+		else
+			delete_post_meta( $post_id, $field );
+	}
 
 	// check that post is wanting the MediaBurn Vzaar media imported
 	if ( ! empty( $_POST['mediaburn-importer'] ) && ! wp_verify_nonce( $_POST['mediaburn-importer'], 'mediaburn_import' ) )
