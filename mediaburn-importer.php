@@ -581,10 +581,11 @@ function mbi_save_post( $post_id ) {
 	);
 
 	foreach ( $fields as $field ) {
-		if ( isset( $_POST[ $field ] ) )
+		if ( isset( $_POST[ $field ] ) ) {
 			update_custom_meta( $post_id, $_POST[ $field ], $field );
-		else
+		} elseif ( 'wpzoom_post_embed_code' != $field ) {
 			delete_post_meta( $post_id, $field );
+		}
 	}
 
 	// check that post is wanting the MediaBurn Vzaar media imported
